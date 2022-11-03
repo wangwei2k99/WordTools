@@ -16,6 +16,7 @@ namespace WordTools
         {
 
         }
+
         private void button1_Click(object sender, RibbonControlEventArgs e)
         {
             Word.Application wapp = new Word.Application();
@@ -50,6 +51,12 @@ namespace WordTools
                         log = $"{log}\r失败：{fileName}";
                         continue;
                     }
+                    else
+                    {
+                        log = $"{log}\r成功：{fileName}";
+                    }
+                    grzf = Regex.Match(text, @"个人支付:*\d+(\.\d+)").ToString();
+                    double fk = Convert.ToDouble(Regex.Match(grzf, @"\d+(\.\d+)").ToString());
                     SearchReplace(ref docx, ysk, "预收款:0.00 起付线:600.00");
                     string text1;
                     if (fk - 600 >= 0)
@@ -86,11 +93,13 @@ namespace WordTools
         }
         private void SearchReplace(ref Word.Document docx, string find, string replace)
         {
+
             Word.Find findObject = docx.Content.Find;
             findObject.ClearFormatting();
             findObject.Text = find;
             findObject.Replacement.ClearFormatting();
             findObject.Replacement.Text = replace;
+
             object replaceAll = Word.WdReplace.wdReplaceAll;
             findObject.Execute(Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value,
                 Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value,
